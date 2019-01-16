@@ -88,15 +88,13 @@
   </head>
   <body>
     <canvas id="c"></canvas>
-    <div id="b"><a href="http://twgljs.org"></a></div>
-    <video id="vid" style="display: none;">
-      <source src="../glass.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' preload />
-      <!-- <source src="../crasho1.mp4" type='video/ogg; codecs="theora, vorbis"' /> -->
-      <!-- <source src="../color-adjust/sample-video.webmvp8.webm" type='video/webm; codecs="vp8, vorbis"' /> -->
+    <div id="b"><a href="http://twgljs.org">twgl.js</a> - video texture</div>
+    <video id="vid" style="display: none;" muted>
+      <source src="crasho2.mp4" type='video/mp4;'/>
     </video>
     <div id="start" class="fulldialog" style="display: none;">
         <div>
-          <img src="../start.svg" />
+          <img src="start.svg" />
         </div>
     </div>
   </body>
@@ -178,9 +176,9 @@ void main() {
     var onePointProgramInfo = twgl.createProgramInfo(gl, ["one-point-vs", "one-point-fs"]);
 
     var shapes = [
-      // twgl.primitives.createCubeBufferInfo(gl, 2),
-      twgl.primitives.createSphereBufferInfo(gl, .5, 4, 2),
-      // twgl.primitives.createTruncatedConeBufferInfo(gl, 1, 0, 2, 24, 1),
+      twgl.primitives.createCubeBufferInfo(gl, 2),
+      twgl.primitives.createSphereBufferInfo(gl, 1, 24, 12),
+      twgl.primitives.createTruncatedConeBufferInfo(gl, 1, 0, 2, 24, 1),
     ];
 
     function rand(min, max) {
@@ -200,7 +198,7 @@ void main() {
     var viewProjection = m4.identity();
 
     var texture = twgl.createTexture(gl, {
-      src: [200, 0, 255],
+      src: [0, 0, 255],
       format: gl.RGB,
       min: gl.LINEAR,
       wrap: gl.CLAMP_TO_EDGE,
@@ -208,7 +206,7 @@ void main() {
 
     var objects = [];
     var drawObjects = [];
-    var numObjects = rand(10, 2150);
+    var numObjects = 100;
     for (var ii = 0; ii < numObjects; ++ii) {
       var uniforms;
       var programInfo;
@@ -218,8 +216,8 @@ void main() {
         u_lightWorldPos: lightWorldPosition,
         u_lightColor: lightColor,
         u_diffuseMult: [1, 1, 1, 1],
-        u_specular: [1, .95, 1, 1],
-        u_shininess: 150,
+        u_specular: [1, 1, 1, 1],
+        u_shininess: 50,
         u_specularFactor: 1,
         u_diffuse: texture,
         u_viewInverse: camera,
@@ -275,7 +273,7 @@ void main() {
           // play the audio. DON'T PLAY THE VIDEO. Set the video's currentTime to match
           // the audio.  I can't believe this works
           audio = document.createElement("audio");
-          audio.src = "../color-adjust/sample-video.mp4";
+          audio.src = "crasho1.mp4";
           audio.addEventListener("ended", function() {
             audio.currentTime = 0;
             audio.play();
@@ -292,7 +290,7 @@ void main() {
     }
 
     function render(time) {
-      time *= 0.000221;
+      time *= 0.001;
       twgl.resizeCanvasToDisplaySize(gl.canvas);
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -303,7 +301,7 @@ void main() {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
       var radius = 10;
-      var orbitSpeed = time * 0.201;
+      var orbitSpeed = time * 0.01;
       var projection = m4.perspective(30 * Math.PI / 180, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.5, 100);
       var eye = [Math.cos(orbitSpeed) * radius, 4, Math.sin(orbitSpeed) * radius];
       var target = [0, 0, 0];
